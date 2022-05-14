@@ -77,7 +77,7 @@
                         <span v-for="(rel, i) in rels">
                             <span v-if="i > 0">= </span>
                             <span>
-                                <span v-for="r in rel">
+                                <span v-for="r in rel" class="d-inline-block">
                                     <span style="font-style: italic;">x</span><!--
                                     --><sub>{{ Math.floor(r / 2) }}</sub><!--
                                     --><sup v-if="r % 2 == 1">-1</sup>
@@ -103,7 +103,7 @@
                     <span>
                         <span v-if="el.prod.length == 0" style="font-style: italic;">e</span>
                         <span v-else>
-                            <span v-for="n in el.prod">
+                            <span v-for="n in el.prod" class="d-inline-block">
                                 <span style="font-style: italic;">x</span><!--
                                 --><sub>{{ n }}</sub>
                             </span>
