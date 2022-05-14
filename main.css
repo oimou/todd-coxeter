@@ -1,0 +1,38 @@
+.title {
+    margin: 15px 0 15px;
+}
+
+.rel {
+    margin: 10px 0;
+}
+
+.rel-digit {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.inputs {
+    background: #fafaff;
+    padding: 15px 20px;
+    margin: 15px 0;
+}
+
+.preview {
+}
+
+.outputs {
+    background: #fffafa;
+    padding: 15px 20px;
+    margin: 15px 0;
+}
+
+.math {
+    font-family: math;
+}
+
+.network {
+    width: 100%;
+    height: 50vh;
+    border: 1px solid #999;
+    background: #fff;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todd-Coxeter</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.1/vue.js" integrity="sha512-i1D6OkXB+ZGx8L0ED6V5oKqTBKtCaZxs4heiheYUu9+IEufVKuHos3Gs//uK7NAMcgBxfmv/OwfXKFCQZBjDqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/standalone/umd/vis-network.min.js" integrity="sha512-DOpf3tO7m7MJHkMMRRoNxiJL4CR+TFLYy2XnIOeTh26Hz8j8i9RHrVkXzh+AQ7mffzIFk538/zcQ3Yoo+7VISA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1 class="title display-5">The Todd-Coxeter algorithm</h1>
+        
+        <p>
+            Computes permutation representations of generators of a group <span style="font-family: math; font-style: italic;">G</span> presented by given generators and relations.
+            The program has been implemented with reference to <a href="https://math.berkeley.edu/~kmill/notes/todd_coxeter.html" target="_blank">this page</a>.
+        </p>
+    
+        <div class="inputs">
+            <div class="mb-3">
+                <label for="" class="form-label"># of generators</label>
+                <input type="number" class="form-control" v-model.number="nGens" min="1" @change="updateGens" />
+            </div>
+    
+            <div class="mb-3">
+                <label for="" class="form-label">Relations</label>
+                <ul>
+                    <li class="rel" v-for="(rel, i) in rels">
+                        <div class="rel-digit" v-for="(r, j) in rel">
+                            <select
+                                class="form-select"
+                                v-model="rels[i][j]"
+                                @change="updateRels"
+                                :disabled="i < nGens">
+                                <option :value="null"></option>
+                                <option v-for="n in (2 * nGens)" :value="n - 1">
+                                    {{ n2x(n - 1) }}
+                                </option>
+                            </select>
+                        </div><!--
+                        --><div class="rel-digit">
+                            <select
+                                class="form-select"
+                                v-model="rels[i][rel.length]"
+                                @change="updateRels"
+                                :disabled="i < nGens">
+                                <option :value="null"></option>
+                                <option v-for="n in (2 * nGens)" :value="n - 1">
+                                    {{ n2x(n - 1) }}
+                                </option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="btn btn-secondary align-middle" @click="addRel">+</button>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="preview">
+                <div>
+                    Generators:
+                    <span v-for="n in nGens" class="math">
+                        <span v-if="n > 1">, </span>
+                        <span style="font-style: italic;">x</span><!--
+                        --><sub>{{ n - 1 }}</sub>
+                    </span>
+                </div>
+                <div>
+                    Relations:
+                    <span class="math">
+                        <span v-for="(rel, i) in rels">
+                            <span v-if="i > 0">= </span>
+                            <span>
+                                <span v-for="r in rel">
+                                    <span style="font-style: italic;">x</span><!--
+                                    --><sub>{{ Math.floor(r / 2) }}</sub><!--
+                                    --><sup v-if="r % 2 == 1">-1</sup>
+                                </span>
+                            </span>
+                        </span>
+                        =
+                        <span style="font-style: italic;">e</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary" @click="onRun">Run</button>
+        </div>
+        
+        <div class="outputs">
+            List of elements:
+            <ul>
+                <li v-for="el in groupElements" class="math">
+                    {{ el.i + 1 }}:
+                    <span>
+                        <span v-if="el.prod.length == 0" style="font-style: italic;">e</span>
+                        <span v-else>
+                            <span v-for="n in el.prod">
+                                <span style="font-style: italic;">x</span><!--
+                                --><sub>{{ n }}</sub>
+                            </span>
+                        </span>
+                    </span>
+                </li>
+            </ul>
+
+            Permutation representations of generators:
+            <ul>
+                <li v-for="(rep, i) in permReps" class="math">
+                    <span style="font-style: italic;">x</span><!--
+                    --><sub>{{ i }}</sub>
+                    :
+                    <span v-for="s in rep">
+                        (<span v-for="(j, k) in s"><!--
+                            --><span v-if="k > 0" style="display:inline-block; width: 0.5rem;"></span><!--
+                            --><span>{{ j + 1 }}</span><!--
+                        --></span>)
+                    </span>
+                </li>
+            </ul>
+
+            Schreier graph:
+            <div ref="network" class="network"></div>
+        </div>
+    </div>
+</body>
+</html>

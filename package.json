@@ -1,0 +1,11 @@
+{
+  "name": "todd-coxeter",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yahata <s1190013@gmail.com>",
+  "license": "ISC"
+}
