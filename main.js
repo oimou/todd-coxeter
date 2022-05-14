@@ -137,7 +137,7 @@ new Vue({
                         let v2 = follow(v, 2 * d);
 
                         if (!(v2 in cosetNames)) {
-                            cosetNames[v2] = [2 * d + 1, ...cosetNames[v]];
+                            cosetNames[v2] = [d, ...cosetNames[v]];
                             Q.push(v2);
                         }
                     }
